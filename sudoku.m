@@ -1,99 +1,77 @@
-function [S, t] = sudoku(S)
-N=75;
+function [S, t] = sudoku(S, T)
+N=10000;
 done=0;
 doubledone=0;
 move=0;
-p=zeros(4,4);
+p=zeros(9,9);
+q=zeros(9);
 
-for i = 1:4
-  for j = 1:4
+for i = 1:9
+  for j = 1:9
     if S(i,j)==0
       p(i,j)=1;
-      S(i,j)=round(3*rand)+1;
+      S(i,j)=round(8*rand)+1;
     end
   end
 end
 
 for t = 1:N
-  for i = 1:4
-    for j = 1:4
+  for i = 1:9
+    for j = 1:9
       if p(i,j)==1
-        c(1) = sum(S(i,:)==1);
-        c(1) = c(1) + sum(S(:,j)==1);
-        if ((i <= 2)&&(j <= 2))
-          c(1) = c(1) + sum(S(1:2,1)==1);
-          c(1) = c(1) + sum(S(1:2,2)==1);
-        elseif ((i <= 2)&&(j > 2))
-          c(1) = c(1) + sum(S(1:2,3)==1);
-          c(1) = c(1) + sum(S(1:2,4)==1);
-        elseif ((i > 2)&&(j <= 2))
-          c(1) = c(1) + sum(S(3:4,1)==1);
-          c(1) = c(1) + sum(S(3:4,2)==1);
-        else
-          c(1) = c(1) + sum(S(3:4,3)==1);
-          c(1) = c(1) + sum(S(3:4,4)==1);
-        end
-        c(2) = sum(S(i,:)==2);
-        c(2) = c(2) + sum(S(:,j)==2);
-        if ((i <= 2)&&(j <= 2))
-          c(2) = c(2) + sum(S(1:2,1)==2);
-          c(2) = c(2) + sum(S(1:2,2)==2);
-        elseif ((i <= 2)&&(j > 2))
-          c(2) = c(2) + sum(S(1:2,3)==2);
-          c(2) = c(2) + sum(S(1:2,4)==2);
-        elseif ((i > 2)&&(j <= 2))
-          c(2) = c(2) + sum(S(3:4,1)==2);
-          c(2) = c(2) + sum(S(3:4,2)==2);
-        else
-          c(2) = c(2) + sum(S(3:4,3)==2);
-          c(2) = c(2) + sum(S(3:4,4)==2);
-        end
-        c(3) = sum(S(i,:)==3);
-        c(3) = c(3) + sum(S(:,j)==3);
-        if ((i <= 2)&&(j <= 2))
-          c(3) = c(3) + sum(S(1:2,1)==3);
-          c(3) = c(3) + sum(S(1:2,2)==3);
-        elseif ((i <= 2)&&(j > 2))
-          c(3) = c(3) + sum(S(1:2,3)==3);
-          c(3) = c(3) + sum(S(1:2,4)==3);
-        elseif ((i > 2)&&(j <= 2))
-          c(3) = c(3) + sum(S(3:4,1)==3);
-          c(3) = c(3) + sum(S(3:4,2)==3);
-        else
-          c(3) = c(3) + sum(S(3:4,3)==3);
-          c(3) = c(3) + sum(S(3:4,4)==3);
-        end
-        c(4) = sum(S(i,:)==4);
-        c(4) = c(4) + sum(S(:,j)==4);
-        if ((i <= 2)&&(j <= 2))
-          c(4) = c(4) + sum(S(1:2,1)==4);
-          c(4) = c(4) + sum(S(1:2,2)==4);
-        elseif ((i <= 2)&&(j > 2))
-          c(4) = c(4) + sum(S(1:2,3)==4);
-          c(4) = c(4) + sum(S(1:2,4)==4);
-        elseif ((i > 2)&&(j <= 2))
-          c(4) = c(4) + sum(S(3:4,1)==4);
-          c(4) = c(4) + sum(S(3:4,2)==4);
-        else
-          c(4) = c(4) + sum(S(3:4,3)==4);
-          c(4) = c(4) + sum(S(3:4,4)==4);
+        for k=1:9
+          c(k) = sum(S(i,:)==k);
+          c(k) = c(k) + sum(S(:,j)==k);
+          if ((i<=3)&&(j<=3))
+            c(k) = c(k) + sum(sum(S(1:3,1:3)==k));
+          elseif ((i<=3)&&(j>3)&&(j<=6))
+            c(k) = c(k) + sum(sum(S(1:3,4:6)==k));
+          elseif ((i<=3)&&(j>6))
+            c(k) = c(k) + sum(sum(S(1:3,7:9)==k));
+          elseif ((i>3)&&(i<=6)&&(j<=3))
+            c(k) = c(k) + sum(sum(S(4:6,1:3)==k));
+          elseif ((i>3)&&(i<=6)&&(j>3)&&(j<=6))
+            c(k) = c(k) + sum(sum(S(4:6,4:6)==k));
+          elseif ((i>3)&&(i<=6)&&(j>6))
+            c(k) = c(k) + sum(sum(S(4:6,7:9)==k));
+          elseif ((i>6)&&(j<=3))
+            c(k) = c(k) + sum(sum(S(7:9,1:3)==k));
+          elseif ((i>6)&&(j>3)&&(j<=6))
+            c(k) = c(k) + sum(sum(S(7:9,4:6)==k));
+          else
+            c(k) = c(k) + sum(sum(S(7:9,7:9)==k));
+          end
         end
 
         c(S(i,j))=c(S(i,j))-1;
 
-        for f = 1:4
+        for f = 1:9
           if c(f) < 0
             c(f) = 0;
           end
         end
 
+        for f = 1:9
+          c(f)=24-c(f);
+        end
+
         move=0;
-        z=rand;
-        if z<0.9
-          [y,x]=min(c);
-          if ne(y, S(i,j))
-            S(i,j)=x;
-            move=1;
+        denom=(exp((1/T)*(c(1)))+exp((1/T)*(c(2)))+exp((1/T)*(c(3)))+exp((1/T)*(c(4)))+exp((1/T)*(c(5)))+exp((1/T)*(c(6)))+exp((1/T)*(c(7)))+exp((1/T)*(c(8)))+exp((1/T)*(c(9))));
+
+        for f=1:9
+          q(f)=(exp((1/T)*(c(f))))/denom;
+        end
+
+        for f=1:9
+          if isnan(q(f))
+            q(f)=1;
+          end
+        end
+        S(i,j) = find(rand<cumsum([q(1),q(2),q(3),q(4),q(5),q(6),q(7),q(8),q(9)]),1);
+        move=1;
+        for m=1:9
+          for n=1:9
+
           end
         end
       end
