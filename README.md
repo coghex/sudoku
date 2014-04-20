@@ -1,7 +1,10 @@
 sudoku
 ======
 
-Solves 4X4 sudoku using game theory
+Imagine that everything said here works for 9x9 puzzles now and I am
+too lazy to change the readme
+
+Solves 4x4 sudoku using game theory
 
 Just input in matlab a array where the empty spots are 0's.
 
